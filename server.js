@@ -1,8 +1,24 @@
-const io = require('socket.io')(3001, {
+// const io = require('socket.io')(3001, {
+//     cors: {
+//         origin: ['*']
+//     }
+// });
+
+const express = require('express');
+const http = require('http');
+const { Server } = require('socket.io');
+
+const app = express();
+const server = http.createServer(app);
+
+const io = new Server(server, {
     cors: {
-        origin: ['*']
+        origin: '*', // Allow all origins for testing; change this to your specific domain in production
+        methods: ['GET', 'POST'],
+        credentials: true // Enable if you need to pass credentials
     }
 });
+
 
 let rooms = {}; // Object to store room data with users
 const users = [];
@@ -42,9 +58,6 @@ const getUsersInRoom = (roomName) => {
     const socketIDsInRoom = rooms[roomName] || [];
     return users.filter(user => socketIDsInRoom.includes(user.id));
 };
-
-// Socket.io CORS options
-io.origins('*'); // Allow all origins for WebSocket connections, or specify your domain.
 
 io.on('connection', socket => {
 
@@ -239,3 +252,9 @@ io.on('connection', socket => {
         console.log(`User ${socket.id} disconnected`);
     });
 })
+
+// Start the server
+const PORT = process.env.PORT || 3001;
+server.listen(PORT, () => {
+    console.log(`Server is running on port ${PORT}`);
+});
