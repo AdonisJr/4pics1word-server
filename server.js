@@ -43,6 +43,9 @@ const getUsersInRoom = (roomName) => {
     return users.filter(user => socketIDsInRoom.includes(user.id));
 };
 
+// Socket.io CORS options
+io.origins('*'); // Allow all origins for WebSocket connections, or specify your domain.
+
 io.on('connection', socket => {
 
     socket.on('new-user', (name, cb) => {
