@@ -1,6 +1,6 @@
 const io = require('socket.io')(3001, {
     cors: {
-        origin: ['https://4pics1word-multiplayer.netlify.app/']
+        origin: ['*']
     }
 });
 
